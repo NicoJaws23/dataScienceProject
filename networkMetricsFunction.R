@@ -7,6 +7,8 @@ library(igraph)
 #and clusterType which is the clustering type for transitivity
 metrics <- function(g, Edges, cutoff, clusterType = c("undirected", "global", "globalundirected", "localundirected", "local", 
 "average", "localaverage", "localaverageundirected", "barrat", "weighted")){
+  node_ids <- V(g)$name
+  
   inNodes <- Edges$to
   inDegree <- as.vector(table(inNodes))
   
@@ -22,7 +24,7 @@ metrics <- function(g, Edges, cutoff, clusterType = c("undirected", "global", "g
   
   clusteringCoefficient <- igraph::transitivity(s1G, type = clusterType)
   
-  x <- data.frame(ID = V(g)$label, In.Degree = inDegree, Out.Degree = outDegree, In.Strength = inStrength$weight, 
+  x <- data.frame(ID = node_ids, In.Degree = inDegree, Out.Degree = outDegree, In.Strength = inStrength$weight, 
                   Out.Strength = outStrength$weight, Betweenness = betweenness, 
                   Eigenvector.Centrality = eigenvectorCentrality$vector, Clustering.Coefficient = clusteringCoefficient)
   
@@ -42,4 +44,4 @@ s1Edges <- data.frame(from = s1$"Actor", to = s1$"Recip", weight = s1$groom.rate
 s1G <- graph_from_data_frame(d = s1Edges, directed = TRUE)
 
 met <- metrics(s1G, s1Edges, cutoff = -1, clusterType = "local")
-V(s1G)$label
+df<- full_join(elo, met, by = c("ID" = "ID"))
