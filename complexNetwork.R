@@ -42,15 +42,18 @@ network <- function(edges, nodesInfo, label = c("Y", "N"), sexCol, speciesCol, m
        ylim = range(node_pos$y) + c(-0.5, 0.5), asp = 1,
        xlab = "", ylab = "", axes = FALSE)
   
+
+  norm_weights <- scales::rescale(edges$weight, to = c(1, 3))
+  
   for(i in 1:nrow(edges)) {
     from <- edges$from[i]
     to <- edges$to[i]
-    w <- edges$weight[i]
+    w <- norm_weights[i]
     
     from_coords <- node_pos[node_pos$node == from, c("x", "y")]
     to_coords <- node_pos[node_pos$node == to, c("x", "y")]
     
-    arrows(x0 = from_coords$x, y0 = from_coords$y,
+    segments(x0 = from_coords$x, y0 = from_coords$y,
            x1 = to_coords$x, y1 = to_coords$y,
            length = 0.1, lwd = w, col = "gray30")
   }
