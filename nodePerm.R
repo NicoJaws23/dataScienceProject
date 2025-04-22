@@ -59,7 +59,7 @@ nodePerm <- function(df, shuffler, formula, n, type = c("rpt", "rptPoisson", "GL
 
 
 c <- nodePerm(df = df, shuffler = "Sex", formula = In.Degree ~ (1|ID) + Sex, n = 1000, type = "GLMM", returnVal = "SexM", na.action = na.exclude)
-
+hist(c$permuted$result)
 #network with focals and humans
 
 #create graph function for complex networks, with node specific attributes
