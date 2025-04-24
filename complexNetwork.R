@@ -1,5 +1,5 @@
 #Complex social network function
-
+library(tidyverse)
 f <- "https://raw.githubusercontent.com/NicoJaws23/dataReplication/refs/heads/main/IDs_Sex_EloScores.csv"
 elo <- read_csv(f)
 head(elo)
@@ -30,7 +30,7 @@ node_info <- data.frame(node = elo$ID, sex = elo$Sex, species = c("ape", "ape", 
                                                                   "ape", "ape", "ape", "human", "ape", "human", "human", "ape", "ape", "ape", "ape", "human", "ape", "ape"))
 
 
-network <- function(edges, nodesInfo, label = c("Y", "N"), sexCol, speciesCol, male, redSpecies){
+network <- function(edges, nodesInfo, label = c("Y", "N"), sexCol, speciesCol, male, redSpecies, diffSpecies = c("Y", "N")){
   nodes <- unique(c(edges$from, edges$to))
   
   angles <- seq(0, 2 * pi, length.out = length(nodes) + 1)[-1]
@@ -60,7 +60,12 @@ network <- function(edges, nodesInfo, label = c("Y", "N"), sexCol, speciesCol, m
   
   shape_map <- ifelse(node_pos[[sexCol]] == male, 21, 24)
   
-  color_map <- ifelse(node_pos[[speciesCol]] == redSpecies, "red", "green")
+  if(diffSpecies == "Y"){
+    color_map <- ifelse(node_pos[[speciesCol]] == redSpecies, "red", "green")
+  }
+  if(diffSpecies == "N"){
+    color_map <- "green"
+  }
   
   points(node_pos$x, node_pos$y, pch = shape_map, bg = color_map, cex = 2)
   
@@ -69,6 +74,6 @@ network <- function(edges, nodesInfo, label = c("Y", "N"), sexCol, speciesCol, m
   }
 }
 
-network(edges = s1Edges, nodesInfo = node_info, label = "N", sexCol = "sex", speciesCol = "species", male = "M", redSpecies = "human")
+network(edges = s1Edges, nodesInfo = node_info, label = "N", sexCol = "sex", speciesCol = "species", male = "M", redSpecies = "human", diffSpecies = "Y")
 
 
