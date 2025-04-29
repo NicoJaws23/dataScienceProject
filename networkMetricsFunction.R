@@ -70,10 +70,23 @@ s3G <- graph_from_data_frame(d = s3Edges, directed = TRUE)
 met1 <- metrics(s1G, s1Edges, cutoff = -1, clusterType = "local")
 met2 <- metrics(s2G, s2Edges, cutoff = -1, clusterType = "local")
 met3 <- metrics(s3G, s3Edges, cutoff = -1, clusterType = "local")
+
 met1 <- full_join(elo, met1, by = c("ID" = "ID"))
-met1 <- met1 |> select(-c(Elo.Sep, Elo.Dec))
+met1 <- met1 |> 
+  select(-c(Elo.Sep, Elo.Dec)) |>
+  mutate(rank = Elo.May, Season = 1) |>
+  select(-Elo.May)
+
 met2 <- full_join(elo, met2, by = c("ID" = "ID"))
-met2 <- met2 |> select(-c(Elo.Dec, Elo.May))
+met2 <- met2 |> 
+  select(-c(Elo.Dec, Elo.May)) |>
+  mutate(rank = Elo.Sep, Season = 2) |>
+  select(-Elo.Sep)
+
 met3 <- full_join(elo, met3, by = c("ID" = "ID"))
-met3 <- met3 |> select(-c(Elo.May, Elo.Sep))
+met3 <- met3 |> 
+  select(-c(Elo.May, Elo.Sep)) |>
+  mutate(rank = Elo.Dec, Season = 3) |>
+  select(-Elo.Dec)
+
 df <- bind_rows(met1, met2, met3)

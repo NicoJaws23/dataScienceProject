@@ -74,6 +74,6 @@ network <- function(edges, nodesInfo, label = c("Y", "N"), sexCol, speciesCol, m
   }
 }
 
-network(edges = s1Edges, nodesInfo = node_info, label = "N", sexCol = "sex", speciesCol = "species", male = "M", redSpecies = "human", diffSpecies = "Y")
+network(edges = s1Edges, nodesInfo = node_info, label = "Y", sexCol = "sex", speciesCol = "species", male = "M", redSpecies = "human", diffSpecies = "Y")
 
 
