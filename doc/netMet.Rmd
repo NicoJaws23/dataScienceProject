@@ -24,7 +24,7 @@ The purpose of this package is to provide the users with functions which can qui
 
 ## Social Network Analysis
 
-Social network analysis is a collection of analytical tools which were developed initially to study human social interaction patterns (Kasper & Voelkl, 2009). This method look at the relationships between a number of individual entities, or nodes, and how they are connected to each other as a result of grouping strategies and behavioral patterning. These connections form edges, which can be weighted to determine the strength of relationships and associations between two group members (also called a dyad) (Sueur et al., 2011). These edges can be directed or undirected. Choosing between these two options depend on what is being investigated. In a grooming network, a directed network would be best to determine who is giving versus who is receiving grooming from who. Undirected networks are useful when looking at subgroup composition as in this case we arent looking at a behavior, just who is associating with who. Social network analysis uses the relationships between the different nodes to calculate various network measures which tell us how central or well connected different individuals are within a group, providing quantifiable data to examine inter-individual differences in social roles (Sueur et al., 2011). Some of these metrics include betweeness, degree, strength, clustering coefficient, and eigenvector centraltiy.
+Social network analysis is a collection of analytical tools which were developed initially to study human social interaction patterns (Kasper & Voelkl, 2009). This method looks at the relationships between a number of individual entities, or nodes, and how they are connected to each other as a result of grouping strategies and behavioral patterning. These connections form edges, which can be weighted to determine the strength of relationships and associations between two group members (also called a dyad) (Sueur et al., 2011). These edges can be directed or undirected. Choosing between these two options depends on what is being investigated. In a grooming network, a directed network would be best to determine who is giving versus who is receiving grooming from who. Undirected networks are useful when looking at subgroup composition as in this case we arent looking at a behavior, just who is associating with who. Social network analysis uses the relationships between the different nodes to calculate various network measures which tell us how central or well connected different individuals are within a group, providing quantifiable data to examine inter-individual differences in social roles (Sueur et al., 2011). Some of these metrics include betweeness, degree, strength, clustering coefficient, and eigenvector centraltiy.
 
 ## Exemplifying the Functionality of netMet
 
@@ -83,7 +83,7 @@ print(met3)
 
 ### Node Based Permutation
 
-As a last step in this analysis we will use the nodePerm() function to conduct a node based permutation. This method is used to determine the significance of network metrics in relation to other factors. The method shuffles node attributes, such as ID or sex, to determine the significance of results. The nodePerm() function is able to do permutation for four different models, guassian repeatability, poisson repeatabiliy, generalized linear mixed models (GLMMs), and GLMMs with a poisson distribution. For this example, we will run a GLMM which evaluates the effect of node ID, sex, and the season on variation of the metric In-Degree. First we have to do some data wrangling to merge our metrics data for analysis. We will then pass this data in the nodePerm function which will return a list containing our original formula, the observed value of the model, and the the set of permuted values.
+As a last step in this analysis we will use the nodePerm() function to conduct a node based permutation. This method is used to determine the significance of network metrics in relation to other factors. The method shuffles node attributes, such as ID or sex, to determine the significance of results. The nodePerm() function is able to do permutation for four different models, Gaussian repeatability, poisson repeatabiliy, generalized linear mixed models (GLMMs), and GLMMs with a poisson distribution. For this example, we will run a GLMM which evaluates the effect of node ID, sex, and the season on variation of the metric In-Degree. First we have to do some data wrangling to merge our metrics data for analysis. We will then pass this data in the nodePerm function which will return a list containing our original formula, the observed value of the model, and the the set of permuted values.
 
 ```{r}
 met1 <- dplyr::full_join(elo, met1, by = c("ID" = "ID"))
@@ -122,7 +122,7 @@ All three functions shown in this vignette have vignettes of their own to explai
 ## Directory
 
 | Variable/Function | Description |
-|----|----|
+|------------------------------------|------------------------------------|
 | s1, s2, s3 | Data frames holding data collected on grooming dyads for each season |
 | s1Edges, s2Edges, s3Edges | Data frames which contain only the actors and recipients of a grooming dyad and the rate of grooming. This data is used for constructing network graphs |
 | node_info | Data frame created to hold the ID, sex, and "species" of each node |
