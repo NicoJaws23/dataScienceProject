@@ -1,0 +1,27 @@
+Package: netMet
+Title: Social Network Metric and Analysis
+Version: 0.0.0.9000
+Authors@R: 
+    person("Nico", "Jaworski", email = "nico.jaworski@utexas.edu", role = c("aut", "cre"))
+Description: The functions in this package calculates 7 unique social network metrics
+  and allows the user to conduct various node based permutations of these metrics and 
+  visualize social networks as graphs which can view the relationship between multiple
+  groups in a single graph. This package was built by Nico Jaworski, Blesing Apamaku, and Lemeng Li
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    dplyr,
+    igraph,
+    lme4,
+    mosaic,
+    readr,
+    rptR,
+    scales
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+Depends: 
+    R (>= 3.5)
+LazyData: true

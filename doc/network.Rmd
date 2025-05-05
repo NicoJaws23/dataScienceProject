@@ -1,0 +1,34 @@
+---
+title: "Complex Social Network Vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Complex Social Network Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(netMet)
+```
+
+This code uses data collected on vervet monkey grooming networks from the study "Consistency in social network position over changing environments in a seasonally breeding primate" published by Maryjka B. Blaszczyk in 2018 in the journal Behavioral Ecology and Sociobiology, (72(1), <https://doi.org/10.1007/s00265-017-2425-y>)
+
+Using the data in the s1 (Season 1) data set, we will construct a social network using the network() function. This function is designed to create a circle shape social network where the edges between nodes have a thickness which reflects the weight of the relationship between nodes. This function will result in males being represented as squares and females as triangles. Additionally, this function is meant to represent the relationship between two species. To show this functionality, a "species" column will be added to the data set and each vervet will be assigned as either A or B. The function will color each node to show the differences, with red being set to species A and green to species B
+
+```{r message=FALSE, warning=FALSE}
+#Edge list with weights and direction
+s1Edges <- data.frame(from = s1$"Actor", to = s1$"Recip", weight = s1$groom.rate)
+
+#Demographic for each node in the network
+node_info <- data.frame(node = elo$ID, sex = elo$Sex, species = c("A", "A", "A", "B", "B", "A", "A", "B", "B", "B", "A", "A", "A", "A", "A", "B", "A", "B", "B", "A", "A", "A", "A", "B", "A", "A"))
+
+network(edges = s1Edges, nodesInfo = node_info, label = "Y", sexCol = "sex", speciesCol = "species", male = "M", redSpecies = "A", diffSpecies = "Y")
+```

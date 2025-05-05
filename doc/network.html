@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Complex Social Network Vignette</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Complex Social Network Vignette</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">warning =</span> <span class="cn">FALSE</span>, <span class="at">message =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(netMet)</span></code></pre></div>
+<p>This code uses data collected on vervet monkey grooming networks from
+the study “Consistency in social network position over changing
+environments in a seasonally breeding primate” published by Maryjka B.
+Blaszczyk in 2018 in the journal Behavioral Ecology and Sociobiology,
+(72(1), <a href="https://doi.org/10.1007/s00265-017-2425-y" class="uri">https://doi.org/10.1007/s00265-017-2425-y</a>)</p>
+<p>Using the data in the s1 (Season 1) data set, we will construct a
+social network using the network() function. This function is designed
+to create a circle shape social network where the edges between nodes
+have a thickness which reflects the weight of the relationship between
+nodes. This function will result in males being represented as squares
+and females as triangles. Additionally, this function is meant to
+represent the relationship between two species. To show this
+functionality, a “species” column will be added to the data set and each
+vervet will be assigned as either A or B. The function will color each
+node to show the differences, with red being set to species A and green
+to species B</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co">#Edge list with weights and direction</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>s1Edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">from =</span> s1<span class="sc">$</span><span class="st">&quot;Actor&quot;</span>, <span class="at">to =</span> s1<span class="sc">$</span><span class="st">&quot;Recip&quot;</span>, <span class="at">weight =</span> s1<span class="sc">$</span>groom.rate)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#Demographic for each node in the network</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>node_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">node =</span> elo<span class="sc">$</span>ID, <span class="at">sex =</span> elo<span class="sc">$</span>Sex, <span class="at">species =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="fu">network</span>(<span class="at">edges =</span> s1Edges, <span class="at">nodesInfo =</span> node_info, <span class="at">label =</span> <span class="st">&quot;Y&quot;</span>, <span class="at">sexCol =</span> <span class="st">&quot;sex&quot;</span>, <span class="at">speciesCol =</span> <span class="st">&quot;species&quot;</span>, <span class="at">male =</span> <span class="st">&quot;M&quot;</span>, <span class="at">redSpecies =</span> <span class="st">&quot;A&quot;</span>, <span class="at">diffSpecies =</span> <span class="st">&quot;Y&quot;</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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xNiCDZLejnWmS5dXtwhT039Xg/rg/QePBKeDvb+1vr568WoLAN7FyNjY+MEP3gMA/EZLl7RPtXRvvg9gZ/va9a7XDqZblHaITH3i+37XorYTPRtfAGiuLkePx6amCjduNJvNmwBab9Rqb4Rr7h0/crQwsr38xiYAjO6/H/itYNXNq8s17eqFn/joCNAOYxOedtleEf62O0IMdS+JLdjgBd+/+JdQnf4xGV3sJd1AfWzs8LGJgwlnN4+OH370wa1WZEbVTX39aGEqqEhGtontZbdf6WXDrJe92w31/y57hBApBzfdjnkE1A38Eoyri3B3yMl5GA2gfQymLsDo+tdfnJ1tH9mpQ6+ejr3EsB9uJWIXca/qsaKwErmO6ehDB0d2bmy2ANwL4Hg4e/hj42O/3NoGojMH/xP4PNqXr2re+oWfmK4UDNiApTZfXZ8I1bAsti+X8/njnwFwHKjVar62pf0Hn5OPo8tbh0dQq9U6d6CjyfJ7bsQohsdgdxE/uG9y7xLSlfLKWfUNNl/pGLBBCuqHIulX9hOR1aTozZTcUAavYzkSXyStsUrLGNOViUWOPSptLlWwFukBS+pyymhkDWrrK7q8cQS/P9l4DHbnyW6+EmV38SIvnf3K0YwyXV2xi7hHdZ+smCi14M8ixWAwYHtXYsZuofnq1W5T6PPEyu4YsD1td+0Ym6+9h8dge13nZEVzzRd6PFCLPm+4pxp2xb+dO0nWqPTum6/uvU2WMT40dhHvGLc3XZCrOHxsGAM21FIzxnTdJuwi3hmy63UfsrYRf2l+K24XFjnuDBnf+A9fK++Y4cF03UZswe5shkai+K24XRgwIoNY5CAyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMy6P8B1OKlU4MZyCMAAAAASUVORK5CYII=" /><!-- --></p>
+<pre><code>#&gt;    node          x             y sex species
+#&gt; 1   alb  0.9709418  2.393157e-01   F       A
+#&gt; 2   dan  0.8854560  4.647232e-01   M       A
+#&gt; 3   dop  0.7485107  6.631227e-01   F       B
+#&gt; 4   eri  0.5680647  8.229839e-01   M       A
+#&gt; 5   fra  0.3546049  9.350162e-01   M       A
+#&gt; 6   gem  0.1205367  9.927089e-01   F       B
+#&gt; 7   gre -0.1205367  9.927089e-01   M       A
+#&gt; 8   har -0.3546049  9.350162e-01   M       B
+#&gt; 9   isa -0.5680647  8.229839e-01   F       A
+#&gt; 10  jan -0.7485107  6.631227e-01   F       A
+#&gt; 11  jul -0.8854560  4.647232e-01   F       B
+#&gt; 12  kim -0.9709418  2.393157e-01   F       A
+#&gt; 13  lul -1.0000000  1.224606e-16   F       A
+#&gt; 14  nin -0.9709418 -2.393157e-01   F       A
+#&gt; 15  oli -0.8854560 -4.647232e-01   M       A
+#&gt; 16  pen -0.7485107 -6.631227e-01   F       B
+#&gt; 17  qui -0.5680647 -8.229839e-01   M       A
+#&gt; 18  ros -0.3546049 -9.350162e-01   F       B
+#&gt; 19  sal -0.1205367 -9.927089e-01   F       A
+#&gt; 20  tam  0.1205367 -9.927089e-01   F       A
+#&gt; 21  uli  0.3546049 -9.350162e-01   M       B
+#&gt; 22  urs  0.5680647 -8.229839e-01   F       B
+#&gt; 23  vin  0.7485107 -6.631227e-01   M       B
+#&gt; 24  xen  0.8854560 -4.647232e-01   F       A
+#&gt; 25  yet  0.9709418 -2.393157e-01   M       A
+#&gt; 26  zar  1.0000000 -2.449213e-16   F       A</code></pre>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

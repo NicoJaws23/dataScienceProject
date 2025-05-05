@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>netMet Vignette</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">netMet Vignette</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(netMet)</span></code></pre></div>
+<div id="the-netmet-package" class="section level1">
+<h1>The netMet package</h1>
+<p>The purpose of this package is to provide the users with functions
+which can quickly (A) calculate seven basic network metrics, (B) run
+node based permutations, and (C) construct network graphs which may
+contain more than one species. These goals are rooted in social network
+analysis</p>
+<div id="social-network-analysis" class="section level2">
+<h2>Social Network Analysis</h2>
+<p>Social network analysis is a collection of analytical tools which
+were developed initially to study human social interaction patterns
+(Kasper &amp; Voelkl, 2009). This method look at the relationships
+between a number of individual entities, or nodes, and how they are
+connected to each other as a result of grouping strategies and
+behavioral patterning. These connections form edges, which can be
+weighted to determine the strength of relationships and associations
+between two group members (also called a dyad) (Sueur et al., 2011).
+These edges can be directed or undirected. Choosing between these two
+options depend on what is being investigated. In a grooming network, a
+directed network would be best to determine who is giving versus who is
+receiving grooming from who. Undirected networks are useful when looking
+at subgroup composition as in this case we arent looking at a behavior,
+just who is associating with who. Social network analysis uses the
+relationships between the different nodes to calculate various network
+measures which tell us how central or well connected different
+individuals are within a group, providing quantifiable data to examine
+inter-individual differences in social roles (Sueur et al., 2011). Some
+of these metrics include betweeness, degree, strength, clustering
+coefficient, and eigenvector centraltiy.</p>
+</div>
+<div id="exemplifying-the-functionality-of-netmet" class="section level2">
+<h2>Exemplifying the Functionality of netMet</h2>
+<p>Here, we use the three functions in this package to characterize and
+analyse the social network of a group of vervet monkeys. The data used
+for these examples was collected by Maryjka B. Blaszczyk and published
+in her study “Consistency in social network position over changing
+environments in a seasonally breeding primate” in 2018 in the journal
+Behavioral Ecology and Sociobiology, (72(1), <a href="https://doi.org/10.1007/s00265-017-2425-y" class="uri">https://doi.org/10.1007/s00265-017-2425-y</a>). The data
+consists of dyads of individuals based on grooming (Actor and Recipient)
+and the grooming rate (seconds of grooming/all time dyad was together).
+The data set spanned three seasons which was done to determine the
+consistency of individual network position over time. Here, we use our
+functions to (A) graph the network from each season, (B) calculate
+network metric for each season, and (C) run a node based permutation of
+the data.</p>
+<div id="loading-in-data" class="section level3">
+<h3>Loading in Data</h3>
+<p>The data need has already been bundled into this package. s1.rda
+contains data from the first season, s2.rda the second season, and
+s3.rda the third season. The elo.rda file contains each individuals ID,
+their sex, and their rank determined by Elo-ratings for each season.
+Here we load in our package and do some data wrangling.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(netMet)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#add season value to all data sets along with type of season specified in article</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(s1, <span class="at">Season =</span> <span class="dv">1</span>, <span class="at">sType =</span> <span class="st">&quot;Mating&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(s2, <span class="at">Season =</span> <span class="dv">2</span>, <span class="at">sType =</span> <span class="st">&quot;Winter&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>s3 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(s3, <span class="at">Season =</span> <span class="dv">3</span>, <span class="at">sType =</span> <span class="st">&quot;Birth&quot;</span>)</span></code></pre></div>
+</div>
+<div id="construct-networks" class="section level3">
+<h3>Construct Networks</h3>
+<p>First we will build networks for each season using our function
+network(). We need to first create a data frame containing the edges.
+This will include the actor, recipient, and grooming rate. In addition,
+we need to data set which contains the information for each node so that
+its shape, color, and label are correct. Males in this function are
+represented as squares, and females are represented as triangles. One
+piece of functionality we wanted to include in this function was the
+ability to show the relationships between individuals of different
+groups, be it of the same species or otherwise. To show this
+functionality, we will artificially assign individual to group A or B in
+the node information</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">#Edge list with weights and direction</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>s1Edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">from =</span> s1<span class="sc">$</span><span class="st">&quot;Actor&quot;</span>, <span class="at">to =</span> s1<span class="sc">$</span><span class="st">&quot;Recip&quot;</span>, <span class="at">weight =</span> s1<span class="sc">$</span>groom.rate)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#Demographic for each node in the network</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>node_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">node =</span> elo<span class="sc">$</span>ID, <span class="at">sex =</span> elo<span class="sc">$</span>Sex, <span class="at">species =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="fu">network</span>(<span class="at">edges =</span> s1Edges, <span class="at">nodesInfo =</span> node_info, <span class="at">label =</span> <span class="st">&quot;Y&quot;</span>, <span class="at">sexCol =</span> <span class="st">&quot;sex&quot;</span>, <span class="at">speciesCol =</span> <span class="st">&quot;species&quot;</span>, <span class="at">male =</span> <span class="st">&quot;M&quot;</span>, <span class="at">redSpecies =</span> <span class="st">&quot;A&quot;</span>, <span class="at">diffSpecies =</span> <span class="st">&quot;Y&quot;</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAIAAACb4TnXAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAZGUlEQVR4nO3db2wb530H8O/TBW6izF6VVNC8LKDdiI6rskZitIVy6gp0KhCQxaneiw3G3nTDgmMyoJBaIMCAug7iea8yFBQKLBWXvMibLeubuCJ6RDcL2AKLFma0zRTBc3zKbKJTXU1o2MWt0gUBbi+ee47P8f6QcvyQsvn9wLCpuyN5tPn189zvee5O+L4PIjLjI4PeAaK7GQNGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADRmQQA0ZkEANGZBADtpfVy0IIIcr12/qqG/XytJCmb/NLUycG7A62sRAkZbpcXy5/UmbmU+X6Rr0khBDid8vBBuWXvxVmSoh8qdoIXuHNakmI6YW69kIb0dcd6Ae8G/i0d7kOAMBxE9Z5FavXf+Px5MXWN08lvIRlRRYmvjf1jC3YHaHdq5suL2wAQP2F+QYAHD0a3dJxPbcdPav4OIAtANZRADjpfKq9aeNvFt4OHk6eqjjHg6UNOC+97KiXqJY+Fbwj3ZJBJ5w0QasUthpBC9bJcdPbr6Lr+777mR7/9fcnLLOck0nvmLqTlIUt2J3Aqrie7/t+0DZVz9W9y+owynFfljGUHcFrlwDkx0bkypPu+cye5Ej4yHE9r/I4ALyz/ioAx31JvuzR4B1v12cZMgzYXjIxt+L7vr9YjC52Ts0VJwCgeKQQLMpPWgBgVbxn4W+PA7IjGPC2dwAAR79UzMklhw8Fm6tm0ap4vld5JHyLE8UJ4D4A+MIp3/f9Z7G5DgC40uNOUrLBNZ4U09H78p7XDrAsx/W0qsfLKd/vo8+3j8Husc63iyGygTv5vN7/sybVg4rne6cs1WOM9xzHnYoT7JvLLuIusAXbs+rl/HNa89GolvLlS8EPl8p/kdJnu/JcvvQ9PNxeMDF3ygFUA/fqc6+Ga6xv/uHH1OPL3xL5s42bwU83AYxbXwCA4KW2qvPVBgBrMp+/9Y80hBiwAdlYmBZCiOnUCt3G1XX1MCxqVP9RLvvpahVp1fcJx105FVlVXPTcihU/FFv5s4+rhz/7l1ehKo3Bc7ca/yPfK9wJz/e9V+Ymun400jBge9VEeLyF739n4QdHXvF83/+2XPbw13zX0Q+62qy/WixuXJWHYL//xeAIbKI4t7Li+77vA4DsZlYg8vMrQafzvWsA0LgCaMdykaOv4oniBDDBeO0SAzYgQalgJb1FKC56jjwG26rPz5fyeSGmz70LAHj3UvlsNflZjaeEyM9fBgCMjvW6NzvJix8OjwH337uv19eiiEEeAA6zoPZgVbzgZ9dpd+KOOmqxKmscLR4P11pFueXjRWuyvRT3fhyp5GsBgB/9BXTsi1dR+2E5biUch1P76YUD0oDlBKMH2n46lfBzWJa2emgxYAMSDVjCiHJRlgmLqcNYlqzjeUEKVATiIfLbOUteF1YaTzrH4+/TfvWkcW8nCFH6mPhwY8AGJBIw+e101Kjw0eDb3vNkQ8lNSVc7Y6krEiOlj1FbFU9F6KTzOACcfD5YLTOk1gbNVjhWEDbRQ4rHYHtBcdH3ff9ZXP+3twFVXThwYsWrOJP6dl78qVZ7aUmI9LzAByDSVsAH3Oj418rcTFDgl5qyqum4fz15HwAc+GywOjLLQ42JTxSDtY3LCTs9RBiwvpMF+nzlhraoXp4WIl966rVIZXDjB9+rXg5/8oGJeH9vRS31AT85QT0qyvEvwAV8QAih5os4rr8yt/LdBgC8fqk9kyNYvX41HGqwJtujZMHaIceA7QH1F0rVRlA08NR0Df272rvMjGU0YnKxTMRVtbHIyxn71ZIQ4rnYnCkEEyILR8JKqN5etadLDjMGrO9kC+DNH1QLgiFlq3BirjgxgYVzCRX45BLC7SZH2eaBjtFvt91yXnmuXN8AgI36ghwqcE5os7aqJbU6ae0wGugR4FAKyhuHDgNARjfKgWpS5A8JVYn0gsauSx0+kHiMp7iZ3yLLSTjHRVs7vJUOtmB7wklHlQwnw7HdagXoayfLRx7wtFTrSplPbVSrco6j474cf3qjOp8f1osPMGCDlfsdAMCBE4tyKpP/t3KKrQNgTm3kAovac9pNzi5rGgJZdXlpAlgBfK1T6gE+UEnaWI6BeRW9A3swmOEV1uvlymE9o4wBG4D3AOD6taxNqrJL1u86nFYjCacaywqGnna5JXyU8qJcns7PJx00hvX6E/05ftyjGLABeC/403Lcrz2cuWW25EZMJLdSvTRfOtk71Q+9ImkvB29drbJWmIUBMyf1qoYPBH8WeqywZR//9EKEf3T9hYSSvRRJkmy0KgDgvxRM2njZ9xeLl14HALx+CQTgnkHvwJDLT1pAA9Vz9WeLxYmNuigldLdcQKQ0Pz4g9HUCtm2LWq1jM9u2l5aWZmdnO5bXarW0Vk3GaR74MjABLMS3sIA5YB4L59mIpWLABsWqeItFAAWgAVRL+ZTzT7pqZ0zAtm0g+F2XmC65pUjKmAA8QI50d4x3lwC4QAloBI3dfHCS9Dv/fYuf4G7GLmK/BB3G6YWm/LkhS9fFZ795KNwmei2MsmpGLgXxySQSchWS6VpaWoqvsm073k+U07L0kn1kHEzvs1pAcBZ0a1Mfn95Ul3IsfT97x+9uDFhfbCxMl6oAHHdlLtexbuz3woc320vPqsMcAM91e/mOJigxSFAxi29jR4XLw5K9DxQTx5odYAXw5FnQXzkxAeCzcpzhSjW8QPcWMLwzOhgw864uTOfnG/Iaa1en1QS/GEfNaVc8bWpFvYdGLMzM7Oxs+DgtbBlrZZsWVwp3KxwXy+jWdpy3Uj07nNcHZsCMq87PNwBYlVfmJtQE2MP6VWmCvD0LoH3E8yfAhBqD0qUX/yBEOxdhY5V46BUuT1ub2G8M2jIPKAPzCR9U/4HnrUgMWL805l+oByd++d7cI92fkEB2Be0kvu/LUmFH25Xdgun058p3ka8ZvLGvxr5KqQ1XqZ1wnrcSYMDMsypygl619MkzsZUiH20LghJIUgsBAPCBWqwKD61F6mi79O6iLr5Qf264pFarBbGua2NfnurKxpIjhOxI8ryVAANmnHNqrviFLx4CgCv/ZOxAJKOlSuwHhgt7beLkkLMc+5oAziVv5asY8rwViQHrj6BUeHn+BX1eh+xTJXeg0k+d1BsxvbARbtCRmbDvl5iljvjp27SbLwBHAKixL6Fi1NE0Rfa5WsoLIVRNZ0jzxYD1W7VUPlNWZwpH6uvxE5h7uARAYkOUVrroRepziykz6kW7W4tye/G45ZxUZ+CMA6ieXVC326wPUzlR+P5uZoDSrdmQlXrH9ReLqJe1CVHyb1+EP2yopEVWJOsYWU6brpFGZrKj6Qt/TDzS2x35caOfF1bFy7ja6l2HU6UGx+1hGq/fZYqGbrcNV3x7fUnim+pzF8PsyyVloAq4QDFcVT1XXyy2e4aO6y0WsZEw9nAXYxdxAIL/zkux+bs9nEDZY0lQX9V7pR49F/en1YOwWLioJS2RM5RXt2fABiZ+HqKL5CMxvbeWXRIMhbmKF9/DDRL3qpdmMJwk6WlD4fUug2S3dpWsOx4D1m9qpGg3/F0fEYW56jFIHZuFo2cdDZptT4UVRDc60UR+KifYXwBDm6kIBmxgqsAGMB3tGN5axSlj5mFGi9RReIxnDJ0zqnauXViVayuAXnYP64JVwA9PHmvMA8DGz36K4cWA9ZU2mQgA8hnXjYrNNZSNWHyMCz3MPOxlBKx753B7Y70VPJyP7p3elAltGoqHjYWvPjWcl7uRGLC+Cu/PEA4pxUeZ5ZKppAmHSIlB15pE4kFaj8/tZbOO6oyr+oolMeydRI6DmRaMAjmuN3nuq8GNjoFXgAlAABbQUNVtWel2tDrBaK7w79ff/EZSPDIaq/Doq2ujpG8THxbTNnvmkCg1gdyUfUzd1U+2qBawAkAbwAPgqOvMRYMXjIsNFQbMtOgwa5QPTKteoq8C1kn/Ug/OzrULy+stbWe2a7VVABVgDqjHhvRk8BYis5aHMWDsIvaLVUH0jMqMi1G7erWjeWM7ZbN4ty2x45f2uOsG+uOR8YdGtZ2R6QLwZQDAWW235Z43gDowpzrDjuv7w5cuMGB945wKLt2Z+CVztd6Uk7JNXEfvLq0q2LWjqG+Q9njp/GuRhKldleUN2QiXtLM/kTrhfrgwYH1SLWXdHQ/aiR7fB4S6RgAA4L5W+rOk+MlgiE0y3O0Ox6r23wjbsFqtJmsYJwDEbsUS0ru71dKHuXXZHYwB2/s25R/x7l9aFzFjNKyXiRpp1Y6wlwgVHtnShrUNr6d70w4XBqx/RLQHFSebBXmTy1J7y5ujAJJCkj063PXQK01q0zdy+NEctLNT2td4k0MLLwAANtRyNzomJsQwNmIMWJ/IW4VD+6/9O4DQjl46Np+ybfsxmayjGV3ExBlPciJi2lSpXsO2c+1CrSaEWJMHXdtrtVpttbkvWDtaeKKQk/snAHmPmCogVIM2Hr3sNgDAGsILSzFgA9MxvyE6Cf2H2uNNfUVaGTAMVWKiMo7NUvMWtFdorq5tY3tttQlgtDApL+u4H+sX15th8uvAZHTQfCvhsiKFI8nvdDfjOFj/CCH0U6ckXxtEksPNcmRsyrbHYmNPfbe9Vltt9wiRm5rZ/9byegsjI9jZQQ5oyk80HRsuh/pRfbphHAQDW7C+CdMFdeutcBysqI6+eqxrZ89y6vFKo72cJ7a0dPHYVPtCxPvQXF1ebwEYv38HkAdjQuvo6vsfDjYMYah0DNgAhMddYeQmAUTr2qvp56dkFDmQflQWf27GBMX2xmMHVcJGPxqu2PrftH1Ld6v3trjDMWD9oDdfUMcq+kyOywAAR6sxukBtObjL5OnY5URDXQe7er+MNpLKjzvX3lJdxNanK549UxjVtu+oy+v3uY0rsYpI/SHvYlxSQ7ThJT1PpGx/RvvepyUqY2pv2FhlN24Jdq69t94CkMvlADTmP3cNhz9v2/ZMUK3oqMsP82kpaVjkMK7H8Z+UGehQs32DekNuaubrx96Ts/JHc4Xjxw6P7GZnOnKY+KN8p9HCEw9tXlxvAbnHCu++EZwJ9vgfHfjJa+/u5h07DNv3jS2YcX6Em3ZLcJmupEbgAwBLS6flD83V5Xl1X6BWc315bRvd2qKMSybKDqR+AQ8gOOxq/dd/yNZrauKDAy0AY+MAfvLaDgDkALjBbcGSOeoIU31iORA4XOkCA9Z/4cG+G51cL0+zP6t+tG1bHfDcA2B29syTcsVoYWrGtu2ZoLzXvLHd7VYpoYzzmiPzhmXCdj5amLFt+9j9W5sNALlHPmfb9kwhvElgEfhKymdx9eOx4IYXw1ijBwM2KHoVW/4PL+sc4RUEarVaTdbEoxPYc48eHhvB0tL5dnkPWPr2zIVarVZb204q4ne9LMds5zFe0IZtbu0AO1ubLQC5g2MAlr77VPZnoQ4MWF8JUZJxmtQWVtXvacdqT57uVv17+qVP9vDu2U2cvvbiiw5kwiL5au9RD+9GAAPWT3qx/nK4ULVgjnYRT0RvBXbjxdmlpdP67KnOeuD5Nx+0bds+NqY1R9mXbeuoSXZW/198uzAKtDYfeeRACxgtTMh8zT79EoDoTK70zzt8JY04BmwwqupKnZ5Wo58AjqsNZGtWq9VqtX+9CszOfv0dAMA74fy/llxwXwuY/dKnZRfxmaQB5fBN9VrI7OxsMIFX9iylYMHBbYyMP7QfaFWrDWDf/60v12pr2zvAzq9+DYRzOF6/3X8tdx8GrE86xpqh5h/KuecWUAQ2gB8nPPXAKLC09KcpLxyZCnwmvdUK27SwZQsrk0+eVs3dadn3q67W1n49/qCaOf/+DoDR/fePbK9dvP6+9ppXUvYJbL4UBmxgwiu3OerCTC+oJccjG8oq4j/0/sq7vePeD88Esz1mz7T7fqfPf+v+4OGDj9n2zPHDIzu/UiNgOWgd2viwWInpUhiwfpBjzfqd6wDMxWYYyZlRFeBH8ueg7N08vbQEjD4AAHggnKoUWwAAOzvbaxfWtlPn8i4tLcn+pBDlemyVasEAPHlm9u8PAAByU9bDwMgIMPLbB4K1TQv4gZoq9WrsXFKmK8SA9UMvA82hI/Kb6rfPxT+3UL6gnzayc23tQk0teOfn2zuqev7Bz3+0vNpsNVdrQgghHljb3om//tJ3rV8DQPXPnwhuGf1k8aAQQojyE+0WrN2UNVfDY7SxYzPBWZYNYB7IA9PR6Yjy13CevJyIAdtzSlA1RNUJq85X2yc1t9Zqy9qpjrh5fXX50B//HQDgkV/8Un+lVnN1eS16zbfZ2dnZp/9ZPj5++nS03K7XBpML8fKtfe3avY3wSvSUyKdBQNJ//O1btPqAFzlDeMaeOXJA+2d76NEjQdcw7RaKzmOFAx2LPpYrzNi2PXNIVS8OHNyvrx9zHg8f73/Ubp8KNqUu3C1V1A5b0R87rngz6L/jPYGTfQcjXlQMlidu7QIlTOWgn13czej4eGtrK7bYce23//KHy5FiYLLco7nmW5E39JP3z0PyTStZSAS7iIPi+36XwxRLa9HygDwAGgvanv2jhalCTt/8nvC3QJiuh6ZmbK+iDv2qz0T6jLnHjuTaVZKRUW36bvMTv4nscfCnfid0Kz1dJLEFG6SOdiyobYTCi3V4wa0i7JlC9Cod7Wtm7BsvHDm8//23Ll5tIffYzMF7t27c2Gw2W8C9+x/8yM1fhNWO3NSM+HHQglmFmQcPjwA/vVB7owXsOzTz5KchLwQCINe+Qpu6I/tuvytsxNiCDZLejnWmS5dXtwhT039Xg/rg/QePBKeDvb+1vr568WoLAN7FyNjY+MEP3gMA/EZLl7RPtXRvvg9gZ/va9a7XDqZblHaITH3i+37XorYTPRtfAGiuLkePx6amCjduNJvNmwBab9Rqb4Rr7h0/crQwsr38xiYAjO6/H/itYNXNq8s17eqFn/joCNAOYxOedtleEf62O0IMdS+JLdjgBd+/+JdQnf4xGV3sJd1AfWzs8LGJgwlnN4+OH370wa1WZEbVTX39aGEqqEhGtontZbdf6WXDrJe92w31/y57hBApBzfdjnkE1A38Eoyri3B3yMl5GA2gfQymLsDo+tdfnJ1tH9mpQ6+ejr3EsB9uJWIXca/qsaKwErmO6ehDB0d2bmy2ANwL4Hg4e/hj42O/3NoGojMH/xP4PNqXr2re+oWfmK4UDNiApTZfXZ8I1bAsti+X8/njnwFwHKjVar62pf0Hn5OPo8tbh0dQq9U6d6CjyfJ7bsQohsdgdxE/uG9y7xLSlfLKWfUNNl/pGLBBCuqHIulX9hOR1aTozZTcUAavYzkSXyStsUrLGNOViUWOPSptLlWwFukBS+pyymhkDWrrK7q8cQS/P9l4DHbnyW6+EmV38SIvnf3K0YwyXV2xi7hHdZ+smCi14M8ixWAwYHtXYsZuofnq1W5T6PPEyu4YsD1td+0Ym6+9h8dge13nZEVzzRd6PFCLPm+4pxp2xb+dO0nWqPTum6/uvU2WMT40dhHvGLc3XZCrOHxsGAM21FIzxnTdJuwi3hmy63UfsrYRf2l+K24XFjnuDBnf+A9fK++Y4cF03UZswe5shkai+K24XRgwIoNY5CAyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMyiAEjMogBIzKIASMy6P8B1OKlU4MZyCMAAAAASUVORK5CYII=" /><!-- --></p>
+<pre><code>#&gt;    node          x             y sex species
+#&gt; 1   alb  0.9709418  2.393157e-01   F       A
+#&gt; 2   dan  0.8854560  4.647232e-01   M       A
+#&gt; 3   dop  0.7485107  6.631227e-01   F       B
+#&gt; 4   eri  0.5680647  8.229839e-01   M       A
+#&gt; 5   fra  0.3546049  9.350162e-01   M       A
+#&gt; 6   gem  0.1205367  9.927089e-01   F       B
+#&gt; 7   gre -0.1205367  9.927089e-01   M       A
+#&gt; 8   har -0.3546049  9.350162e-01   M       B
+#&gt; 9   isa -0.5680647  8.229839e-01   F       A
+#&gt; 10  jan -0.7485107  6.631227e-01   F       A
+#&gt; 11  jul -0.8854560  4.647232e-01   F       B
+#&gt; 12  kim -0.9709418  2.393157e-01   F       A
+#&gt; 13  lul -1.0000000  1.224606e-16   F       A
+#&gt; 14  nin -0.9709418 -2.393157e-01   F       A
+#&gt; 15  oli -0.8854560 -4.647232e-01   M       A
+#&gt; 16  pen -0.7485107 -6.631227e-01   F       B
+#&gt; 17  qui -0.5680647 -8.229839e-01   M       A
+#&gt; 18  ros -0.3546049 -9.350162e-01   F       B
+#&gt; 19  sal -0.1205367 -9.927089e-01   F       A
+#&gt; 20  tam  0.1205367 -9.927089e-01   F       A
+#&gt; 21  uli  0.3546049 -9.350162e-01   M       B
+#&gt; 22  urs  0.5680647 -8.229839e-01   F       B
+#&gt; 23  vin  0.7485107 -6.631227e-01   M       B
+#&gt; 24  xen  0.8854560 -4.647232e-01   F       A
+#&gt; 25  yet  0.9709418 -2.393157e-01   M       A
+#&gt; 26  zar  1.0000000 -2.449213e-16   F       A</code></pre>
+</div>
+<div id="calculate-network-metrics" class="section level3">
+<h3>Calculate Network Metrics</h3>
+<p>Now that we have gotten a quick view of the relationships between
+individuals in this data, we can calculate the network metrics for each
+season using the metrics() function. This function takes a graph item
+created by igraph and efficiently calculates and compiles individual
+network metrics into a data frame. We will again determine the edges for
+each group before passing it to igraph. The metrics function needs both
+edge data and the igraph object to calculate the metrics.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co">#Use season data to create dataframes containing edge values and pass this into graph_from_data_frame() to create networks </span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>s1Edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">from =</span> s1<span class="sc">$</span><span class="st">&quot;Actor&quot;</span>, <span class="at">to =</span> s1<span class="sc">$</span><span class="st">&quot;Recip&quot;</span>, <span class="at">weight =</span> s1<span class="sc">$</span>groom.rate)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>s1G <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> s1Edges, <span class="at">directed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>s2Edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">from =</span> s2<span class="sc">$</span><span class="st">&quot;Actor&quot;</span>, <span class="at">to =</span> s2<span class="sc">$</span><span class="st">&quot;Recip&quot;</span>, <span class="at">weight =</span> s2<span class="sc">$</span>groom.rate)</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>s2G <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> s2Edges, <span class="at">directed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>s3Edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">from =</span> s3<span class="sc">$</span><span class="st">&quot;Actor&quot;</span>, <span class="at">to =</span> s3<span class="sc">$</span><span class="st">&quot;Recip&quot;</span>, <span class="at">weight =</span> s3<span class="sc">$</span>groom.rate)</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>s3G <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> s3Edges, <span class="at">directed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#Use metrics() to calculate network metris for each season</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>met1 <span class="ot">&lt;-</span> <span class="fu">metrics</span>(s1G, s1Edges, <span class="at">cutoff =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">clusterType =</span> <span class="st">&quot;local&quot;</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="fu">print</span>(met1)</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt;      ID In.Degree Out.Degree In.Strength Out.Strength Betweenness</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; alb alb        17         18 0.039126215  0.061736006           7</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; dan dan         6          9 0.008355151  0.007084023          25</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; dop dop         5          9 0.009988800  0.009743543          22</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; eri eri        11          5 0.027506757  0.004257243          58</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; fra fra        10          6 0.013695313  0.003308306          37</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; gem gem         7         12 0.010113700  0.041067251          33</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; gre gre         6         12 0.011915475  0.012055813          48</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; har har         8          6 0.019774698  0.015852701           0</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; isa isa         9         16 0.015176341  0.040952572          46</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; jan jan        14          9 0.018280059  0.013123792          64</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; jul jul        12         11 0.025625035  0.020836455          75</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt; kim kim        11         11 0.013746843  0.011448672          91</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt; lul lul        13          7 0.022335393  0.016779921           0</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt; nin nin        17         16 0.033308731  0.043444380          77</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt; oli oli        10          4 0.017995995  0.006155580           0</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt; pen pen        11         12 0.021412746  0.018534219           2</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt; qui qui        14         14 0.023693104  0.029473214          54</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt; ros ros        14         14 0.029096374  0.048945097          84</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt; sal sal        17         18 0.046112905  0.044997520          63</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co">#&gt; tam tam        17         15 0.035774084  0.030987605           0</span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#&gt; uli uli         4          4 0.004989950  0.002832705          19</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#&gt; urs urs         7         14 0.017376211  0.036589019          39</span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#&gt; vin vin        15         14 0.036292144  0.018507621         153</span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#&gt; xen xen        12         10 0.023145098  0.026703344          20</span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co">#&gt; yet yet         9         10 0.008852008  0.010357183           8</span></span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co">#&gt; zar zar        16         16 0.064056713  0.021972058          79</span></span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="co">#&gt;     Eigenvector.Centrality Clustering.Coefficient</span></span>
+<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="co">#&gt; alb             1.00000000              0.5321637</span></span>
+<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="co">#&gt; dan             0.14182604              0.5333333</span></span>
+<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a><span class="co">#&gt; dop             0.18338544              0.6000000</span></span>
+<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a><span class="co">#&gt; eri             0.37760828              0.6515152</span></span>
+<span id="cb5-46"><a href="#cb5-46" tabindex="-1"></a><span class="co">#&gt; fra             0.16223318              0.6363636</span></span>
+<span id="cb5-47"><a href="#cb5-47" tabindex="-1"></a><span class="co">#&gt; gem             0.58235160              0.6666667</span></span>
+<span id="cb5-48"><a href="#cb5-48" tabindex="-1"></a><span class="co">#&gt; gre             0.21176711              0.5256410</span></span>
+<span id="cb5-49"><a href="#cb5-49" tabindex="-1"></a><span class="co">#&gt; har             0.40058937              0.8055556</span></span>
+<span id="cb5-50"><a href="#cb5-50" tabindex="-1"></a><span class="co">#&gt; isa             0.48835542              0.5588235</span></span>
+<span id="cb5-51"><a href="#cb5-51" tabindex="-1"></a><span class="co">#&gt; jan             0.31576912              0.5523810</span></span>
+<span id="cb5-52"><a href="#cb5-52" tabindex="-1"></a><span class="co">#&gt; jul             0.59648462              0.6043956</span></span>
+<span id="cb5-53"><a href="#cb5-53" tabindex="-1"></a><span class="co">#&gt; kim             0.30083057              0.6538462</span></span>
+<span id="cb5-54"><a href="#cb5-54" tabindex="-1"></a><span class="co">#&gt; lul             0.39103279              0.6538462</span></span>
+<span id="cb5-55"><a href="#cb5-55" tabindex="-1"></a><span class="co">#&gt; nin             0.62219309              0.5751634</span></span>
+<span id="cb5-56"><a href="#cb5-56" tabindex="-1"></a><span class="co">#&gt; oli             0.30513590              0.7777778</span></span>
+<span id="cb5-57"><a href="#cb5-57" tabindex="-1"></a><span class="co">#&gt; pen             0.41026642              0.6153846</span></span>
+<span id="cb5-58"><a href="#cb5-58" tabindex="-1"></a><span class="co">#&gt; qui             0.55105392              0.5497076</span></span>
+<span id="cb5-59"><a href="#cb5-59" tabindex="-1"></a><span class="co">#&gt; ros             0.93580518              0.5964912</span></span>
+<span id="cb5-60"><a href="#cb5-60" tabindex="-1"></a><span class="co">#&gt; sal             0.98789392              0.5672515</span></span>
+<span id="cb5-61"><a href="#cb5-61" tabindex="-1"></a><span class="co">#&gt; tam             0.59006119              0.5588235</span></span>
+<span id="cb5-62"><a href="#cb5-62" tabindex="-1"></a><span class="co">#&gt; uli             0.09685402              0.6190476</span></span>
+<span id="cb5-63"><a href="#cb5-63" tabindex="-1"></a><span class="co">#&gt; urs             0.61017200              0.6095238</span></span>
+<span id="cb5-64"><a href="#cb5-64" tabindex="-1"></a><span class="co">#&gt; vin             0.60341099              0.5882353</span></span>
+<span id="cb5-65"><a href="#cb5-65" tabindex="-1"></a><span class="co">#&gt; xen             0.51832527              0.6282051</span></span>
+<span id="cb5-66"><a href="#cb5-66" tabindex="-1"></a><span class="co">#&gt; yet             0.22949374              0.6818182</span></span>
+<span id="cb5-67"><a href="#cb5-67" tabindex="-1"></a><span class="co">#&gt; zar             0.86282707              0.5620915</span></span>
+<span id="cb5-68"><a href="#cb5-68" tabindex="-1"></a>met2 <span class="ot">&lt;-</span> <span class="fu">metrics</span>(s2G, s2Edges, <span class="at">cutoff =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">clusterType =</span> <span class="st">&quot;local&quot;</span>)</span>
+<span id="cb5-69"><a href="#cb5-69" tabindex="-1"></a><span class="fu">print</span>(met2)</span>
+<span id="cb5-70"><a href="#cb5-70" tabindex="-1"></a><span class="co">#&gt;      ID In.Degree Out.Degree In.Strength Out.Strength Betweenness</span></span>
+<span id="cb5-71"><a href="#cb5-71" tabindex="-1"></a><span class="co">#&gt; alb alb        18         19 0.031444844  0.036497185          11</span></span>
+<span id="cb5-72"><a href="#cb5-72" tabindex="-1"></a><span class="co">#&gt; dan dan        13         13 0.009588003  0.005919843          91</span></span>
+<span id="cb5-73"><a href="#cb5-73" tabindex="-1"></a><span class="co">#&gt; dop dop        12         16 0.007074139  0.020996301           1</span></span>
+<span id="cb5-74"><a href="#cb5-74" tabindex="-1"></a><span class="co">#&gt; eri eri        21          9 0.034011935  0.002913066          74</span></span>
+<span id="cb5-75"><a href="#cb5-75" tabindex="-1"></a><span class="co">#&gt; fra fra        17         15 0.018231240  0.010449569          49</span></span>
+<span id="cb5-76"><a href="#cb5-76" tabindex="-1"></a><span class="co">#&gt; gem gem        19         22 0.028515347  0.071021418           0</span></span>
+<span id="cb5-77"><a href="#cb5-77" tabindex="-1"></a><span class="co">#&gt; gre gre        14         18 0.014169994  0.015516760         102</span></span>
+<span id="cb5-78"><a href="#cb5-78" tabindex="-1"></a><span class="co">#&gt; har har        19         16 0.029671303  0.023213630           9</span></span>
+<span id="cb5-79"><a href="#cb5-79" tabindex="-1"></a><span class="co">#&gt; isa isa        21         22 0.034148814  0.059650659           3</span></span>
+<span id="cb5-80"><a href="#cb5-80" tabindex="-1"></a><span class="co">#&gt; jan jan        21         19 0.024211593  0.033719534          27</span></span>
+<span id="cb5-81"><a href="#cb5-81" tabindex="-1"></a><span class="co">#&gt; jul jul        20         17 0.037681892  0.020597240          77</span></span>
+<span id="cb5-82"><a href="#cb5-82" tabindex="-1"></a><span class="co">#&gt; kim kim        17         15 0.025116460  0.017117097          65</span></span>
+<span id="cb5-83"><a href="#cb5-83" tabindex="-1"></a><span class="co">#&gt; lul lul        20         18 0.023250499  0.012679284          64</span></span>
+<span id="cb5-84"><a href="#cb5-84" tabindex="-1"></a><span class="co">#&gt; nin nin        18         20 0.026084970  0.033270037           2</span></span>
+<span id="cb5-85"><a href="#cb5-85" tabindex="-1"></a><span class="co">#&gt; oli oli        19         19 0.023250023  0.010716979          86</span></span>
+<span id="cb5-86"><a href="#cb5-86" tabindex="-1"></a><span class="co">#&gt; pen pen        18         22 0.022955635  0.043208703          10</span></span>
+<span id="cb5-87"><a href="#cb5-87" tabindex="-1"></a><span class="co">#&gt; qui qui        12         16 0.008124533  0.019084559         157</span></span>
+<span id="cb5-88"><a href="#cb5-88" tabindex="-1"></a><span class="co">#&gt; ros ros        19         22 0.029534105  0.051597071           4</span></span>
+<span id="cb5-89"><a href="#cb5-89" tabindex="-1"></a><span class="co">#&gt; sal sal        21         23 0.037751201  0.030648783          79</span></span>
+<span id="cb5-90"><a href="#cb5-90" tabindex="-1"></a><span class="co">#&gt; tam tam        21         18 0.042409145  0.027367821           3</span></span>
+<span id="cb5-91"><a href="#cb5-91" tabindex="-1"></a><span class="co">#&gt; uli uli         7          9 0.002130257  0.002967239          76</span></span>
+<span id="cb5-92"><a href="#cb5-92" tabindex="-1"></a><span class="co">#&gt; urs urs        16         16 0.032136320  0.028971859          32</span></span>
+<span id="cb5-93"><a href="#cb5-93" tabindex="-1"></a><span class="co">#&gt; vin vin        19         21 0.027511007  0.020178751          32</span></span>
+<span id="cb5-94"><a href="#cb5-94" tabindex="-1"></a><span class="co">#&gt; xen xen        21         21 0.035760765  0.042081208          19</span></span>
+<span id="cb5-95"><a href="#cb5-95" tabindex="-1"></a><span class="co">#&gt; yet yet        19         20 0.016431992  0.020316505          15</span></span>
+<span id="cb5-96"><a href="#cb5-96" tabindex="-1"></a><span class="co">#&gt; zar zar        17         13 0.053515748  0.014010663          27</span></span>
+<span id="cb5-97"><a href="#cb5-97" tabindex="-1"></a><span class="co">#&gt;     Eigenvector.Centrality Clustering.Coefficient</span></span>
+<span id="cb5-98"><a href="#cb5-98" tabindex="-1"></a><span class="co">#&gt; alb             0.70135920              0.8526316</span></span>
+<span id="cb5-99"><a href="#cb5-99" tabindex="-1"></a><span class="co">#&gt; dan             0.11055351              0.8596491</span></span>
+<span id="cb5-100"><a href="#cb5-100" tabindex="-1"></a><span class="co">#&gt; dop             0.30063330              0.8692810</span></span>
+<span id="cb5-101"><a href="#cb5-101" tabindex="-1"></a><span class="co">#&gt; eri             0.38084761              0.8142857</span></span>
+<span id="cb5-102"><a href="#cb5-102" tabindex="-1"></a><span class="co">#&gt; fra             0.23851619              0.8479532</span></span>
+<span id="cb5-103"><a href="#cb5-103" tabindex="-1"></a><span class="co">#&gt; gem             1.00000000              0.8311688</span></span>
+<span id="cb5-104"><a href="#cb5-104" tabindex="-1"></a><span class="co">#&gt; gre             0.23934332              0.8736842</span></span>
+<span id="cb5-105"><a href="#cb5-105" tabindex="-1"></a><span class="co">#&gt; har             0.49745970              0.8631579</span></span>
+<span id="cb5-106"><a href="#cb5-106" tabindex="-1"></a><span class="co">#&gt; isa             0.83215387              0.8339921</span></span>
+<span id="cb5-107"><a href="#cb5-107" tabindex="-1"></a><span class="co">#&gt; jan             0.56424990              0.8498024</span></span>
+<span id="cb5-108"><a href="#cb5-108" tabindex="-1"></a><span class="co">#&gt; jul             0.61555389              0.8398268</span></span>
+<span id="cb5-109"><a href="#cb5-109" tabindex="-1"></a><span class="co">#&gt; kim             0.48817717              0.8888889</span></span>
+<span id="cb5-110"><a href="#cb5-110" tabindex="-1"></a><span class="co">#&gt; lul             0.32319436              0.8063241</span></span>
+<span id="cb5-111"><a href="#cb5-111" tabindex="-1"></a><span class="co">#&gt; nin             0.50090988              0.8441558</span></span>
+<span id="cb5-112"><a href="#cb5-112" tabindex="-1"></a><span class="co">#&gt; oli             0.28328892              0.8095238</span></span>
+<span id="cb5-113"><a href="#cb5-113" tabindex="-1"></a><span class="co">#&gt; pen             0.69707346              0.8181818</span></span>
+<span id="cb5-114"><a href="#cb5-114" tabindex="-1"></a><span class="co">#&gt; qui             0.24042699              0.9117647</span></span>
+<span id="cb5-115"><a href="#cb5-115" tabindex="-1"></a><span class="co">#&gt; ros             0.79914742              0.8498024</span></span>
+<span id="cb5-116"><a href="#cb5-116" tabindex="-1"></a><span class="co">#&gt; sal             0.68832650              0.8079710</span></span>
+<span id="cb5-117"><a href="#cb5-117" tabindex="-1"></a><span class="co">#&gt; tam             0.68368628              0.8138528</span></span>
+<span id="cb5-118"><a href="#cb5-118" tabindex="-1"></a><span class="co">#&gt; uli             0.05009257              0.8727273</span></span>
+<span id="cb5-119"><a href="#cb5-119" tabindex="-1"></a><span class="co">#&gt; urs             0.64616119              0.8304094</span></span>
+<span id="cb5-120"><a href="#cb5-120" tabindex="-1"></a><span class="co">#&gt; vin             0.42543403              0.8095238</span></span>
+<span id="cb5-121"><a href="#cb5-121" tabindex="-1"></a><span class="co">#&gt; xen             0.79632127              0.8484848</span></span>
+<span id="cb5-122"><a href="#cb5-122" tabindex="-1"></a><span class="co">#&gt; yet             0.26588354              0.8528139</span></span>
+<span id="cb5-123"><a href="#cb5-123" tabindex="-1"></a><span class="co">#&gt; zar             0.80774108              0.8431373</span></span>
+<span id="cb5-124"><a href="#cb5-124" tabindex="-1"></a>met3 <span class="ot">&lt;-</span> <span class="fu">metrics</span>(s3G, s3Edges, <span class="at">cutoff =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">clusterType =</span> <span class="st">&quot;local&quot;</span>)</span>
+<span id="cb5-125"><a href="#cb5-125" tabindex="-1"></a><span class="fu">print</span>(met3)</span>
+<span id="cb5-126"><a href="#cb5-126" tabindex="-1"></a><span class="co">#&gt;      ID In.Degree Out.Degree In.Strength Out.Strength Betweenness</span></span>
+<span id="cb5-127"><a href="#cb5-127" tabindex="-1"></a><span class="co">#&gt; alb alb        14         16 0.026443085  0.031297873          68</span></span>
+<span id="cb5-128"><a href="#cb5-128" tabindex="-1"></a><span class="co">#&gt; dan dan         6          8 0.006274302  0.005536688           3</span></span>
+<span id="cb5-129"><a href="#cb5-129" tabindex="-1"></a><span class="co">#&gt; dop dop        12         17 0.015137948  0.029613289          26</span></span>
+<span id="cb5-130"><a href="#cb5-130" tabindex="-1"></a><span class="co">#&gt; eri eri        20          6 0.039608286  0.002019566          20</span></span>
+<span id="cb5-131"><a href="#cb5-131" tabindex="-1"></a><span class="co">#&gt; fra fra         7          7 0.007697091  0.006615943           2</span></span>
+<span id="cb5-132"><a href="#cb5-132" tabindex="-1"></a><span class="co">#&gt; gem gem        16         16 0.021998259  0.069818259          59</span></span>
+<span id="cb5-133"><a href="#cb5-133" tabindex="-1"></a><span class="co">#&gt; gre gre        10         11 0.018569406  0.009182963          34</span></span>
+<span id="cb5-134"><a href="#cb5-134" tabindex="-1"></a><span class="co">#&gt; har har        12         13 0.012128455  0.013297396           1</span></span>
+<span id="cb5-135"><a href="#cb5-135" tabindex="-1"></a><span class="co">#&gt; isa isa        16         21 0.017944381  0.049641963          59</span></span>
+<span id="cb5-136"><a href="#cb5-136" tabindex="-1"></a><span class="co">#&gt; jan jan        19         15 0.015229588  0.015551207         112</span></span>
+<span id="cb5-137"><a href="#cb5-137" tabindex="-1"></a><span class="co">#&gt; jul jul        16         16 0.030355948  0.021976591           9</span></span>
+<span id="cb5-138"><a href="#cb5-138" tabindex="-1"></a><span class="co">#&gt; kim kim        10         11 0.016860930  0.010009222           6</span></span>
+<span id="cb5-139"><a href="#cb5-139" tabindex="-1"></a><span class="co">#&gt; lul lul        14         13 0.016666905  0.013461043          92</span></span>
+<span id="cb5-140"><a href="#cb5-140" tabindex="-1"></a><span class="co">#&gt; nin nin        18         21 0.027004442  0.033666288          25</span></span>
+<span id="cb5-141"><a href="#cb5-141" tabindex="-1"></a><span class="co">#&gt; oli oli         7          7 0.009614853  0.003566471           7</span></span>
+<span id="cb5-142"><a href="#cb5-142" tabindex="-1"></a><span class="co">#&gt; pen pen        12         20 0.015119313  0.038262270         129</span></span>
+<span id="cb5-143"><a href="#cb5-143" tabindex="-1"></a><span class="co">#&gt; qui qui         9         14 0.004127257  0.011596572         168</span></span>
+<span id="cb5-144"><a href="#cb5-144" tabindex="-1"></a><span class="co">#&gt; ros ros        16         18 0.026223128  0.035883602          87</span></span>
+<span id="cb5-145"><a href="#cb5-145" tabindex="-1"></a><span class="co">#&gt; sal sal        16         12 0.049649209  0.032736939           1</span></span>
+<span id="cb5-146"><a href="#cb5-146" tabindex="-1"></a><span class="co">#&gt; tam tam        17         14 0.037493169  0.031905827           1</span></span>
+<span id="cb5-147"><a href="#cb5-147" tabindex="-1"></a><span class="co">#&gt; uli uli         8          5 0.004626455  0.003287493          21</span></span>
+<span id="cb5-148"><a href="#cb5-148" tabindex="-1"></a><span class="co">#&gt; urs urs        12         11 0.032915976  0.026031066           7</span></span>
+<span id="cb5-149"><a href="#cb5-149" tabindex="-1"></a><span class="co">#&gt; vin vin        11         10 0.011948027  0.014551497          10</span></span>
+<span id="cb5-150"><a href="#cb5-150" tabindex="-1"></a><span class="co">#&gt; xen xen        14         12 0.040242878  0.014261153          49</span></span>
+<span id="cb5-151"><a href="#cb5-151" tabindex="-1"></a><span class="co">#&gt; yet yet        15         15 0.009572252  0.018724530         110</span></span>
+<span id="cb5-152"><a href="#cb5-152" tabindex="-1"></a><span class="co">#&gt; zar zar        11          9 0.036379781  0.007335613          54</span></span>
+<span id="cb5-153"><a href="#cb5-153" tabindex="-1"></a><span class="co">#&gt;     Eigenvector.Centrality Clustering.Coefficient</span></span>
+<span id="cb5-154"><a href="#cb5-154" tabindex="-1"></a><span class="co">#&gt; alb             0.52124155              0.7660819</span></span>
+<span id="cb5-155"><a href="#cb5-155" tabindex="-1"></a><span class="co">#&gt; dan             0.06649576              0.7222222</span></span>
+<span id="cb5-156"><a href="#cb5-156" tabindex="-1"></a><span class="co">#&gt; dop             0.39800408              0.7720588</span></span>
+<span id="cb5-157"><a href="#cb5-157" tabindex="-1"></a><span class="co">#&gt; eri             0.31878178              0.6714286</span></span>
+<span id="cb5-158"><a href="#cb5-158" tabindex="-1"></a><span class="co">#&gt; fra             0.10630655              0.7500000</span></span>
+<span id="cb5-159"><a href="#cb5-159" tabindex="-1"></a><span class="co">#&gt; gem             1.00000000              0.7251462</span></span>
+<span id="cb5-160"><a href="#cb5-160" tabindex="-1"></a><span class="co">#&gt; gre             0.15431509              0.5604396</span></span>
+<span id="cb5-161"><a href="#cb5-161" tabindex="-1"></a><span class="co">#&gt; har             0.10597034              0.6571429</span></span>
+<span id="cb5-162"><a href="#cb5-162" tabindex="-1"></a><span class="co">#&gt; isa             0.43342296              0.6403162</span></span>
+<span id="cb5-163"><a href="#cb5-163" tabindex="-1"></a><span class="co">#&gt; jan             0.25307770              0.7105263</span></span>
+<span id="cb5-164"><a href="#cb5-164" tabindex="-1"></a><span class="co">#&gt; jul             0.47385066              0.6666667</span></span>
+<span id="cb5-165"><a href="#cb5-165" tabindex="-1"></a><span class="co">#&gt; kim             0.25376966              0.8589744</span></span>
+<span id="cb5-166"><a href="#cb5-166" tabindex="-1"></a><span class="co">#&gt; lul             0.26866363              0.7428571</span></span>
+<span id="cb5-167"><a href="#cb5-167" tabindex="-1"></a><span class="co">#&gt; nin             0.50409453              0.7142857</span></span>
+<span id="cb5-168"><a href="#cb5-168" tabindex="-1"></a><span class="co">#&gt; oli             0.08239757              0.6388889</span></span>
+<span id="cb5-169"><a href="#cb5-169" tabindex="-1"></a><span class="co">#&gt; pen             0.50214047              0.7157895</span></span>
+<span id="cb5-170"><a href="#cb5-170" tabindex="-1"></a><span class="co">#&gt; qui             0.07962942              0.6985294</span></span>
+<span id="cb5-171"><a href="#cb5-171" tabindex="-1"></a><span class="co">#&gt; ros             0.61067534              0.6842105</span></span>
+<span id="cb5-172"><a href="#cb5-172" tabindex="-1"></a><span class="co">#&gt; sal             0.95456872              0.8382353</span></span>
+<span id="cb5-173"><a href="#cb5-173" tabindex="-1"></a><span class="co">#&gt; tam             0.61055721              0.7254902</span></span>
+<span id="cb5-174"><a href="#cb5-174" tabindex="-1"></a><span class="co">#&gt; uli             0.03107922              0.8055556</span></span>
+<span id="cb5-175"><a href="#cb5-175" tabindex="-1"></a><span class="co">#&gt; urs             0.74711604              0.9047619</span></span>
+<span id="cb5-176"><a href="#cb5-176" tabindex="-1"></a><span class="co">#&gt; vin             0.15387693              0.7454545</span></span>
+<span id="cb5-177"><a href="#cb5-177" tabindex="-1"></a><span class="co">#&gt; xen             0.68652415              0.8333333</span></span>
+<span id="cb5-178"><a href="#cb5-178" tabindex="-1"></a><span class="co">#&gt; yet             0.13230008              0.5882353</span></span>
+<span id="cb5-179"><a href="#cb5-179" tabindex="-1"></a><span class="co">#&gt; zar             0.50823961              0.7582418</span></span></code></pre></div>
+</div>
+<div id="node-based-permutation" class="section level3">
+<h3>Node Based Permutation</h3>
+<p>As a last step in this analysis we will use the nodePerm() function
+to conduct a node based permutation. This method is used to determine
+the significance of network metrics in relation to other factors. The
+method shuffles node attributes, such as ID or sex, to determine the
+significance of results. The nodePerm() function is able to do
+permutation for four different models, guassian repeatability, poisson
+repeatabiliy, generalized linear mixed models (GLMMs), and GLMMs with a
+poisson distribution. For this example, we will run a GLMM which
+evaluates the effect of node ID, sex, and the season on variation of the
+metric In-Degree. First we have to do some data wrangling to merge our
+metrics data for analysis. We will then pass this data in the nodePerm
+function which will return a list containing our original formula, the
+observed value of the model, and the the set of permuted values.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>met1 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">full_join</span>(elo, met1, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;ID&quot;</span> <span class="ot">=</span> <span class="st">&quot;ID&quot;</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>met1 <span class="ot">&lt;-</span> met1 <span class="sc">|&gt;</span> </span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Elo.Sep, Elo.Dec)) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">rank =</span> Elo.May, <span class="at">Season =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Elo.May)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>met2 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">full_join</span>(elo, met2, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;ID&quot;</span> <span class="ot">=</span> <span class="st">&quot;ID&quot;</span>))</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>met2 <span class="ot">&lt;-</span> met2 <span class="sc">|&gt;</span> </span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Elo.Dec, Elo.May)) <span class="sc">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">rank =</span> Elo.Sep, <span class="at">Season =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Elo.Sep)</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>met3 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">full_join</span>(elo, met3, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;ID&quot;</span> <span class="ot">=</span> <span class="st">&quot;ID&quot;</span>))</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>met3 <span class="ot">&lt;-</span> met3 <span class="sc">|&gt;</span> </span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Elo.May, Elo.Sep)) <span class="sc">|&gt;</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">rank =</span> Elo.Dec, <span class="at">Season =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Elo.Dec)</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>df <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(met1, met2, met3)</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#Use nodePerm model to run a generalized linear mixed model to determine the variation of In.Degree in relation to ID, Season, and Sex permuted 1000 times</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Season =</span> <span class="fu">as.factor</span>(Season))</span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">nodePerm</span>(<span class="at">df =</span> df, <span class="at">shuffler =</span> <span class="st">&quot;Sex&quot;</span>, <span class="at">formula =</span> In.Degree <span class="sc">~</span> (<span class="dv">1</span><span class="sc">|</span>ID) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Season) <span class="sc">+</span> Sex, <span class="at">n =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">&quot;GLMM&quot;</span>, <span class="at">returnVal =</span> <span class="st">&quot;SexM&quot;</span>, <span class="at">na.action =</span> na.exclude)</span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt; Registered S3 method overwritten by &#39;mosaic&#39;:</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt;   method                           from   </span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt;   fortify.SpatialPolygonsDataFrame ggplot2</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="fu">print</span>(c<span class="sc">$</span>observed)</span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt; [1] -3.295833</span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="fu">hist</span>(c<span class="sc">$</span>permuted<span class="sc">$</span>result)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+<div id="notes" class="section level2">
+<h2>Notes</h2>
+<p>All three functions shown in this vignette have vignettes of their
+own to explain their functionality separately.</p>
+</div>
+<div id="directory" class="section level2">
+<h2>Directory</h2>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable/Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>s1, s2, s3</td>
+<td>Data frames holding data collected on grooming dyads for each
+season</td>
+</tr>
+<tr class="even">
+<td>s1Edges, s2Edges, s3Edges</td>
+<td>Data frames which contain only the actors and recipients of a
+grooming dyad and the rate of grooming. This data is used for
+constructing network graphs</td>
+</tr>
+<tr class="odd">
+<td>node_info</td>
+<td>Data frame created to hold the ID, sex, and “species” of each
+node</td>
+</tr>
+<tr class="even">
+<td>s1G, s2G, s3G</td>
+<td>Graph objects created using the igraph function
+graph_from_data_frame()</td>
+</tr>
+<tr class="odd">
+<td>met1, met2, met3</td>
+<td>Data frames which hold each individuals network metrics calculated
+using the metric() function for each season</td>
+</tr>
+<tr class="even">
+<td>df</td>
+<td>Data frame containing social network metrics, demographic details of
+each individual, and rank for every season</td>
+</tr>
+<tr class="odd">
+<td>c</td>
+<td>Variable created to hold the outputs of the nodePerm() function</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p>Blaszczyk, M. B. (2018). Consistency in social network position over
+changing environments in a seasonally breeding primate. <em>Behavioral
+Ecology and Sociobiology</em>, <em>72</em>(1), 11. <a href="https://doi.org/10.1007/s00265-017-2425-y" class="uri">https://doi.org/10.1007/s00265-017-2425-y</a></p>
+<p>Kasper, C., &amp; Voelkl, B. (2009). A social network analysis of
+primate groups. Primates, 50(4), 343–356. <a href="https://doi.org/10.1007/s10329-009-0153-2" class="uri">https://doi.org/10.1007/s10329-009-0153-2</a></p>
+<p>Sueur, C., Jacobs, A., Amblard, F., Petit, O., &amp; King, A. J.
+(2011). How can social network analysis improve the study of primate
+behavior? American Journal of Primatology, 73(8), 703–719.<a href="https://doi.org/10.1002/ajp.20915" class="uri">https://doi.org/10.1002/ajp.20915</a></p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

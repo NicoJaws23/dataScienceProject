@@ -1,0 +1,140 @@
+---
+title: "netMet Vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{netMet Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(netMet)
+```
+
+# The netMet package
+
+The purpose of this package is to provide the users with functions which can quickly (A) calculate seven basic network metrics, (B) run node based permutations, and (C) construct network graphs which may contain more than one species. These goals are rooted in social network analysis
+
+## Social Network Analysis
+
+Social network analysis is a collection of analytical tools which were developed initially to study human social interaction patterns (Kasper & Voelkl, 2009). This method look at the relationships between a number of individual entities, or nodes, and how they are connected to each other as a result of grouping strategies and behavioral patterning. These connections form edges, which can be weighted to determine the strength of relationships and associations between two group members (also called a dyad) (Sueur et al., 2011). These edges can be directed or undirected. Choosing between these two options depend on what is being investigated. In a grooming network, a directed network would be best to determine who is giving versus who is receiving grooming from who. Undirected networks are useful when looking at subgroup composition as in this case we arent looking at a behavior, just who is associating with who. Social network analysis uses the relationships between the different nodes to calculate various network measures which tell us how central or well connected different individuals are within a group, providing quantifiable data to examine inter-individual differences in social roles (Sueur et al., 2011). Some of these metrics include betweeness, degree, strength, clustering coefficient, and eigenvector centraltiy.
+
+## Exemplifying the Functionality of netMet
+
+Here, we use the three functions in this package to characterize and analyse the social network of a group of vervet monkeys. The data used for these examples was collected by Maryjka B. Blaszczyk and published in her study "Consistency in social network position over changing environments in a seasonally breeding primate" in 2018 in the journal Behavioral Ecology and Sociobiology, (72(1), <https://doi.org/10.1007/s00265-017-2425-y>). The data consists of dyads of individuals based on grooming (Actor and Recipient) and the grooming rate (seconds of grooming/all time dyad was together). The data set spanned three seasons which was done to determine the consistency of individual network position over time. Here, we use our functions to (A) graph the network from each season, (B) calculate network metric for each season, and (C) run a node based permutation of the data.
+
+### Loading in Data
+
+The data need has already been bundled into this package. s1.rda contains data from the first season, s2.rda the second season, and s3.rda the third season. The elo.rda file contains each individuals ID, their sex, and their rank determined by Elo-ratings for each season. Here we load in our package and do some data wrangling.
+
+```{r}
+library(netMet)
+
+#add season value to all data sets along with type of season specified in article
+s1 <- dplyr::mutate(s1, Season = 1, sType = "Mating")
+s2 <- dplyr::mutate(s2, Season = 2, sType = "Winter")
+s3 <- dplyr::mutate(s3, Season = 3, sType = "Birth")
+```
+
+### Construct Networks
+
+First we will build networks for each season using our function network(). We need to first create a data frame containing the edges. This will include the actor, recipient, and grooming rate. In addition, we need to data set which contains the information for each node so that its shape, color, and label are correct. Males in this function are represented as squares, and females are represented as triangles. One piece of functionality we wanted to include in this function was the ability to show the relationships between individuals of different groups, be it of the same species or otherwise. To show this functionality, we will artificially assign individual to group A or B in the node information
+
+```{r}
+#Edge list with weights and direction
+s1Edges <- data.frame(from = s1$"Actor", to = s1$"Recip", weight = s1$groom.rate)
+
+#Demographic for each node in the network
+node_info <- data.frame(node = elo$ID, sex = elo$Sex, species = c("A", "A", "A", "B", "B", "A", "A", "B", "B", "B", "A", "A", "A", "A", "A", "B", "A", "B", "B", "A", "A", "A", "A", "B", "A", "A"))
+
+network(edges = s1Edges, nodesInfo = node_info, label = "Y", sexCol = "sex", speciesCol = "species", male = "M", redSpecies = "A", diffSpecies = "Y")
+```
+
+### Calculate Network Metrics
+
+Now that we have gotten a quick view of the relationships between individuals in this data, we can calculate the network metrics for each season using the metrics() function. This function takes a graph item created by igraph and efficiently calculates and compiles individual network metrics into a data frame. We will again determine the edges for each group before passing it to igraph. The metrics function needs both edge data and the igraph object to calculate the metrics.
+
+```{r}
+#Use season data to create dataframes containing edge values and pass this into graph_from_data_frame() to create networks 
+s1Edges <- data.frame(from = s1$"Actor", to = s1$"Recip", weight = s1$groom.rate)
+s1G <- igraph::graph_from_data_frame(d = s1Edges, directed = TRUE)
+
+s2Edges <- data.frame(from = s2$"Actor", to = s2$"Recip", weight = s2$groom.rate)
+s2G <- igraph::graph_from_data_frame(d = s2Edges, directed = TRUE)
+
+s3Edges <- data.frame(from = s3$"Actor", to = s3$"Recip", weight = s3$groom.rate)
+s3G <- igraph::graph_from_data_frame(d = s3Edges, directed = TRUE)
+
+#Use metrics() to calculate network metris for each season
+met1 <- metrics(s1G, s1Edges, cutoff = -1, clusterType = "local")
+print(met1)
+met2 <- metrics(s2G, s2Edges, cutoff = -1, clusterType = "local")
+print(met2)
+met3 <- metrics(s3G, s3Edges, cutoff = -1, clusterType = "local")
+print(met3)
+```
+
+### Node Based Permutation
+
+As a last step in this analysis we will use the nodePerm() function to conduct a node based permutation. This method is used to determine the significance of network metrics in relation to other factors. The method shuffles node attributes, such as ID or sex, to determine the significance of results. The nodePerm() function is able to do permutation for four different models, guassian repeatability, poisson repeatabiliy, generalized linear mixed models (GLMMs), and GLMMs with a poisson distribution. For this example, we will run a GLMM which evaluates the effect of node ID, sex, and the season on variation of the metric In-Degree. First we have to do some data wrangling to merge our metrics data for analysis. We will then pass this data in the nodePerm function which will return a list containing our original formula, the observed value of the model, and the the set of permuted values.
+
+```{r}
+met1 <- dplyr::full_join(elo, met1, by = c("ID" = "ID"))
+met1 <- met1 |> 
+  dplyr::select(-c(Elo.Sep, Elo.Dec)) |>
+  dplyr::mutate(rank = Elo.May, Season = 1) |>
+  dplyr::select(-Elo.May)
+
+met2 <- dplyr::full_join(elo, met2, by = c("ID" = "ID"))
+met2 <- met2 |> 
+  dplyr::select(-c(Elo.Dec, Elo.May)) |>
+  dplyr::mutate(rank = Elo.Sep, Season = 2) |>
+  dplyr::select(-Elo.Sep)
+
+met3 <- dplyr::full_join(elo, met3, by = c("ID" = "ID"))
+met3 <- met3 |> 
+  dplyr::select(-c(Elo.May, Elo.Sep)) |>
+  dplyr::mutate(rank = Elo.Dec, Season = 3) |>
+  dplyr::select(-Elo.Dec)
+
+df <- dplyr::bind_rows(met1, met2, met3)
+
+#Use nodePerm model to run a generalized linear mixed model to determine the variation of In.Degree in relation to ID, Season, and Sex permuted 1000 times
+df <- df |>
+  dplyr::mutate(Season = as.factor(Season))
+
+c <- nodePerm(df = df, shuffler = "Sex", formula = In.Degree ~ (1|ID) + (1|Season) + Sex, n = 1000, type = "GLMM", returnVal = "SexM", na.action = na.exclude)
+print(c$observed)
+hist(c$permuted$result)
+```
+
+## Notes
+
+All three functions shown in this vignette have vignettes of their own to explain their functionality separately.
+
+## Directory
+
+| Variable/Function | Description |
+|----|----|
+| s1, s2, s3 | Data frames holding data collected on grooming dyads for each season |
+| s1Edges, s2Edges, s3Edges | Data frames which contain only the actors and recipients of a grooming dyad and the rate of grooming. This data is used for constructing network graphs |
+| node_info | Data frame created to hold the ID, sex, and "species" of each node |
+| s1G, s2G, s3G | Graph objects created using the igraph function graph_from_data_frame() |
+| met1, met2, met3 | Data frames which hold each individuals network metrics calculated using the metric() function for each season |
+| df | Data frame containing social network metrics, demographic details of each individual, and rank for every season |
+| c | Variable created to hold the outputs of the nodePerm() function |
+
+## References
+
+Blaszczyk, M. B. (2018). Consistency in social network position over changing environments in a seasonally breeding primate. *Behavioral Ecology and Sociobiology*, *72*(1), 11. <https://doi.org/10.1007/s00265-017-2425-y>
+
+Kasper, C., & Voelkl, B. (2009). A social network analysis of primate groups. Primates, 50(4), 343–356. <https://doi.org/10.1007/s10329-009-0153-2>
+
+Sueur, C., Jacobs, A., Amblard, F., Petit, O., & King, A. J. (2011). How can social network analysis improve the study of primate behavior? American Journal of Primatology, 73(8), 703–719.<https://doi.org/10.1002/ajp.20915>
